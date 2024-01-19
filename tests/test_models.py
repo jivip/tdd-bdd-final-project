@@ -209,4 +209,51 @@ class TestProductModel(unittest.TestCase):
         for product in found:
             self.assertEqual(product.category, category)
 
-    def test_deserialize()
+    def test_deserialize(self):
+        """It should raise multiple DataValidationErrors"""
+        product = ProductFactory()
+        test_prod_0 = {
+            'name': "Test",
+            'description': "Test1",
+            'price': 50.0,
+            'available': "something",
+            'category': Category.CLOTHS
+                    }
+
+        self.assertRaises(DataValidationError, product.deserialize, test_prod_0)
+        
+        test_prod_1 = {
+            'name': "Test",
+            'description': "Test1",
+            'price': 50.0,
+            'available': True,
+            'category': "unknown"
+                    }
+        
+        self.assertRaises(DataValidationError, product.deserialize, test_prod_1)
+
+        test_prod_2 = {
+            'name': "Test",
+            'description': "Test1",
+            'price': 50.0,
+            'available': True,
+            'category': None
+                    }
+        
+        self.assertRaises(DataValidationError, product.deserialize, test_prod_2)
+
+    def test_find_by_price(self):
+        """It should find by price"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        initial_price = product.price
+
+        self.assertIsNotNone(product.id)
+
+        self.assertTrue(product.price, Product.find_by_price(initial_price))
+
+        self.assertTrue(product.price, Product.find_by_price(initial_price.__repr__))
+
+
+
