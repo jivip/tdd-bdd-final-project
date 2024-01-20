@@ -4,7 +4,7 @@ Environment for Behave Testing
 from os import getenv
 from selenium import webdriver
 
-WAIT_SECONDS = int(getenv('WAIT_SECONDS', '30'))
+WAIT_SECONDS = int(getenv('WAIT_SECONDS', '60'))
 BASE_URL = getenv('BASE_URL', 'http://localhost:8080')
 DRIVER = getenv('DRIVER', 'firefox').lower()
 
@@ -18,6 +18,9 @@ def before_all(context):
         context.driver = get_firefox()
     else:
         context.driver = get_chrome()
+    # options = webdriver.FirefoxOptions()
+    # options.add_argument("--headless")
+    # context.driver = webdriver.Firefox(options=options)
     context.driver.implicitly_wait(context.wait_seconds)
     context.config.setup_logging()
 
